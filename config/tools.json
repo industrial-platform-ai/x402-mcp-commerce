@@ -1,5 +1,5 @@
 {
-  "$comment": "Industrial Platform buyer-runtime registry. Four native x402 tools settle in USDC on Base. Designed for operator-installed funded runtimes with explicit spend caps.",
+  "$comment": "Industrial Platform buyer-runtime registry. Native web + recurring crypto-agent x402 tools settle in USDC on Base. Designed for operator-installed funded runtimes with explicit spend caps.",
   "defaults": {
     "rail": "auto",
     "timeoutMs": 20000
@@ -105,6 +105,149 @@
         "chain": {
           "type": "string",
           "description": "CAIP-2 chain id; eip155:8453 for Base or eip155:1 for Ethereum."
+        }
+      },
+      "rail": "evm"
+    },
+    {
+      "name": "monitor_wallet",
+      "description": "Recurring wallet monitor: check ETH/token balances and new USDC/ERC-20 transfers since the prior cursor. Returns next_cursor and current_state_hash for the next scheduled call.",
+      "upstream": "industrial-platform",
+      "baseUrl": "https://x402-gateway-production-1f21.up.railway.app",
+      "method": "POST",
+      "path": "/agent/wallet-monitor",
+      "price": "$0.005",
+      "input": {
+        "address": {
+          "type": "string",
+          "required": true,
+          "description": "20-byte EVM wallet address."
+        },
+        "network": {
+          "type": "string",
+          "description": "base or ethereum; defaults to base."
+        },
+        "tokens": {
+          "type": "object",
+          "description": "Optional array of ERC-20 contracts."
+        },
+        "activity_contract": {
+          "type": "string",
+          "description": "ERC-20 activity contract; defaults to USDC."
+        },
+        "cursor": {
+          "type": "number",
+          "description": "Previous next_cursor block number."
+        },
+        "lookback_blocks": {
+          "type": "number",
+          "description": "Initial scan lookback, up to 5000 blocks."
+        },
+        "previous_state_hash": {
+          "type": "string",
+          "description": "Prior state hash for change detection."
+        }
+      },
+      "rail": "evm"
+    },
+    {
+      "name": "treasury_snapshot",
+      "description": "One-call treasury snapshot: ETH and ERC-20 balances, gas/base fee and recent USDC/ERC-20 activity with cursor and state hash for recurring polling.",
+      "upstream": "industrial-platform",
+      "baseUrl": "https://x402-gateway-production-1f21.up.railway.app",
+      "method": "POST",
+      "path": "/agent/treasury-snapshot",
+      "price": "$0.01",
+      "input": {
+        "address": {
+          "type": "string",
+          "required": true,
+          "description": "20-byte EVM wallet address."
+        },
+        "network": {
+          "type": "string",
+          "description": "base or ethereum; defaults to base."
+        },
+        "tokens": {
+          "type": "object",
+          "description": "Optional array of ERC-20 contracts."
+        },
+        "activity_contract": {
+          "type": "string",
+          "description": "ERC-20 activity contract; defaults to USDC."
+        },
+        "activity_cursor": {
+          "type": "number",
+          "description": "Previous next_cursor block number."
+        },
+        "lookback_blocks": {
+          "type": "number",
+          "description": "Initial scan lookback, up to 5000 blocks."
+        },
+        "previous_state_hash": {
+          "type": "string",
+          "description": "Prior state hash for change detection."
+        }
+      },
+      "rail": "evm"
+    },
+    {
+      "name": "pretrade_context",
+      "description": "Pre-trade data bundle for crypto agents: wallet balances, ERC-20 allowance, current gas/base fee, realtime price, 24h stats and best bid/ask. Data-only; never submits a trade.",
+      "upstream": "industrial-platform",
+      "baseUrl": "https://x402-gateway-production-1f21.up.railway.app",
+      "method": "POST",
+      "path": "/agent/pretrade",
+      "price": "$0.01",
+      "input": {
+        "address": {
+          "type": "string",
+          "required": true,
+          "description": "Wallet address."
+        },
+        "spender": {
+          "type": "string",
+          "required": true,
+          "description": "Spender/contract address."
+        },
+        "token_contract": {
+          "type": "string",
+          "required": true,
+          "description": "ERC-20 token contract."
+        },
+        "network": {
+          "type": "string",
+          "description": "base or ethereum; defaults to base."
+        },
+        "product_id": {
+          "type": "string",
+          "required": true,
+          "description": "Coinbase Exchange product, e.g. BTC-USD."
+        }
+      },
+      "rail": "evm"
+    },
+    {
+      "name": "watch_transaction",
+      "description": "Poll an EVM transaction until confirmed or reverted. Returns confirmations, current_state_hash and next-check state for recurring confirmation workflows.",
+      "upstream": "industrial-platform",
+      "baseUrl": "https://x402-gateway-production-1f21.up.railway.app",
+      "method": "POST",
+      "path": "/agent/transaction-watch",
+      "price": "$0.003",
+      "input": {
+        "tx_hash": {
+          "type": "string",
+          "required": true,
+          "description": "32-byte EVM transaction hash."
+        },
+        "network": {
+          "type": "string",
+          "description": "base or ethereum; defaults to base."
+        },
+        "previous_state_hash": {
+          "type": "string",
+          "description": "Prior state hash for detecting status changes."
         }
       },
       "rail": "evm"
