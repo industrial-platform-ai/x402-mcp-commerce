@@ -1,15 +1,15 @@
 {
-  "name": "@nirholas/x402-mcp-commerce",
+  "name": "@industrial-platform/x402-buyer-runtime",
   "version": "0.1.0",
-  "description": "MCP server that gives Claude/GPT agents commerce tools — each tool call pays an upstream x402 endpoint and returns its artifact",
-  "author": "nirholas <nichxbt@gmail.com>",
+  "description": "Funded MCP buyer runtime with Industrial Platform web, monitoring, metadata and wallet tools hard-wired over x402.",
+  "author": "Industrial Platform",
   "type": "module",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nirholas/x402-mcp-commerce"
+    "url": "https://github.com/industrial-platform-ai/x402-mcp-commerce"
   },
-  "homepage": "https://nirholas.github.io/x402-mcp-commerce/",
+  "homepage": "https://github.com/industrial-platform-ai/x402-mcp-commerce/tree/industrial-platform-distribution",
   "keywords": [
     "x402",
     "micropayments",
@@ -22,11 +22,16 @@
     "mcp",
     "model-context-protocol",
     "claude",
-    "tool-use"
+    "tool-use",
+    "industrial-platform",
+    "rag",
+    "web-monitoring",
+    "metadata",
+    "wallet-balance"
   ],
   "main": "dist/mcp.js",
   "bin": {
-    "x402-mcp-commerce": "dist/mcp.js"
+    "industrial-platform-x402-buyer": "dist/mcp.js"
   },
   "files": [
     "dist",
@@ -41,7 +46,8 @@
     "build": "tsc",
     "start": "node dist/mcp.js",
     "inspector": "node dist/server.js",
-    "client": "tsx examples/agent-client.ts"
+    "client": "tsx examples/agent-client.ts",
+    "prepare": "npm run build"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",
